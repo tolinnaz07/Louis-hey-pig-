@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Couple Space ❤️</title>
+    <style>
+        :root {
+            --pink-bg: #fff0f5;
+            --pink-card: #ffe4e1;
+            --pink-accent: #ff69b4;
+            --pink-dark: #d87093;
+            
+            --blue-bg: #f0f8ff;
+            --blue-card: #e6f2ff;
+            --blue-accent: #1e90ff;
+            --blue-dark: #4682b4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f7f9fc;
+            color: #333;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: #4a4a4a;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #777;
+            font-size: 1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Column Cards */
+        .column {
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .column.her {
+            background-color: var(--pink-bg);
+            border: 2px solid #ffccd5;
+        }
+
+        .column.him {
+            background-color: var(--blue-bg);
+            border: 2px solid #cce5ff;
+        }
+
+        .profile-title {
+            font-size: 1.5rem;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px stroke #fff;
+        }
+
+        .column.her .profile-title { color: var(--pink-dark); }
+        .column.him .profile-title { color: var(--blue-dark); }
+
+        /* Meter Section */
+        .meter-box {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .meter-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .meter-item {
+            margin-bottom: 12px;
+        }
+
+        .meter-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar-bg {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 50%;
+            transition: width 0.3s ease;
+        }
+
+        .column.her .love-fill { background: var(--pink-accent); }
+        .column.her .hate-fill { background: #ff4d4d; }
+        .column.him .love-fill { background: var(--blue-accent); }
+        .column.him .hate-fill { background: #ff4d4d; }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-row input[type="range"] {
+            flex: 1;
+        }
+
+        /* Calendar Section */
+        .calendar-box {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .calendar-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .calendar-nav-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+        .calendar-nav-btn:hover { background: #eee; }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .weekday {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #888;
+            padding-bottom: 5px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            position: relative;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+        .day-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .column.her .day-cell.selected { background: var(--pink-card); border: 1px solid var(--pink-accent); }
+        .column.him .day-cell.selected { background: var(--blue-card); border: 1px solid var(--blue-accent); }
+
+        .event-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 3px;
+        }
+
+        .column.her .event-dot { background: var(--pink-accent); }
+        .column.him .event-dot { background: var(--blue-accent); }
+
+        /* Save Button */
+        .save-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .column.her .save-btn { background: var(--pink-dark); }
+        .column.him .save-btn { background: var(--blue-dark); }
+        .save-btn:hover { opacity: 0.9; }
+
+        /* Event Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-content h4 { text-align: center; }
+        .modal-content input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; }
+        .modal-btn { padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-add { background: #28a745; color: white; }
+        .btn-close { background: #6c757d; color: white; }
+        .task-list { max-height: 120px; overflow-y: auto; font-size: 0.9rem; }
+        .task-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Our Shared Space ❤️</h1>
+        <p>Track our moods & schedule our days together</p>
+    </header>
+
+    <div class="dashboard">
+        <!-- Her Section (Pink) -->
+        <div class="column her" id="her-col">
+            <h2 class="profile-title">Her Dashboard 🌸</h2>
+
+            <div class="meter-box">
+                <h3>Mood & Feel Meter</h3>
+                
+                <div class="meter-item">
+                    <div class="meter-labels">
+                        <span>Love Index</span>
+                        <span id="her-love-val">80%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill love-fill" id="her-love-bar" style="width: 80%;"></div>
+                    </div>
+                    <div class="control-row">
+                        <input type="range" min="0" max="100" value="80" oninput="updateMeter('her', 'love', this.value)">
+                    </div>
+                </div>
+
+                <div class="meter-item">
+                    <div class="meter-labels">
+                        <span>Hate / Annoyed</span>
+                        <span id="her-hate-val">10%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill hate-fill" id="her-hate-bar" style="width: 10%;"></div>
+                    </div>
+                    <div class="control-row">
+                        <input type="range" min="0" max="100" value="10" oninput="updateMeter('her', 'hate', this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="calendar-box">
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn" onclick="changeMonth('her', -1)">❮</button>
+                    <h3 id="her-cal-title">Month Year</h3>
+                    <button class="calendar-nav-btn" onclick="changeMonth('her', 1)">❯</button>
+                </div>
+                <div class="calendar-grid" id="her-cal-grid"></div>
+            </div>
+
+            <button class="save-btn" onclick="saveData('her')">Save Her Settings 💾</button>
+        </div>
+
+        <!-- His Section (Blue) -->
+        <div class="column him" id="him-col">
+            <h2 class="profile-title">His Dashboard 📘</h2>
+
+            <div class="meter-box">
+                <h3>Mood & Feel Meter</h3>
+                
+                <div class="meter-item">
+                    <div class="meter-labels">
+                        <span>Love Index</span>
+                        <span id="him-love-val">85%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill love-fill" id="him-love-bar" style="width: 85%;"></div>
+                    </div>
+                    <div class="control-row">
+                        <input type="range" min="0" max="100" value="85" oninput="updateMeter('him', 'love', this.value)">
+                    </div>
+                </div>
+
+                <div class="meter-item">
+                    <div class="meter-labels">
+                        <span>Hate / Annoyed</span>
+                        <span id="him-hate-val">5%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill hate-fill" id="him-hate-bar" style="width: 5%;"></div>
+                    </div>
+                    <div class="control-row">
+                        <input type="range" min="0" max="100" value="5" oninput="updateMeter('him', 'hate', this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="calendar-box">
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn" onclick="changeMonth('him', -1)">❮</button>
+                    <h3 id="him-cal-title">Month Year</h3>
+                    <button class="calendar-nav-btn" onclick="changeMonth('him', 1)">❯</button>
+                </div>
+                <div class="calendar-grid" id="him-cal-grid"></div>
+            </div>
+
+            <button class="save-btn" onclick="saveData('him')">Save His Settings 💾</button>
+        </div>
+    </div>
+
+    <!-- Event Popup Modal -->
+    <div class="modal" id="event-modal">
+        <div class="modal-content">
+            <h4 id="modal-date-title">Date Tasks</h4>
+            <div class="task-list" id="modal-task-list"></div>
+            <input type="text" id="modal-input" placeholder="Enter new task/event...">
+            <div class="modal-actions">
+                <button class="modal-btn btn-add" onclick="addTask()">Add Event</button>
+                <button class="modal-btn btn-close" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            her: { love: 80, hate: 10, month: new Date().getMonth(), year: new Date().getFullYear(), events: {} },
+            him: { love: 85, hate: 5, month: new Date().getMonth(), year: new Date().getFullYear(), events: {} }
+        };
+
+        let activeUser = null;
+        let selectedDateKey = null;
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        // Initialize & Load Saved Data
+        function init() {
+            const saved = localStorage.getItem('couple_dashboard_data');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                state.her.love = parsed.her?.love ?? 80;
+                state.her.hate = parsed.her?.hate ?? 10;
+                state.her.events = parsed.her?.events ?? {};
+                
+                state.him.love = parsed.him?.love ?? 85;
+                state.him.hate = parsed.him?.hate ?? 5;
+                state.him.events = parsed.him?.events ?? {};
+            }
+
+            updateMeterUI('her', 'love', state.her.love);
+            updateMeterUI('her', 'hate', state.her.hate);
+            updateMeterUI('him', 'love', state.him.love);
+            updateMeterUI('him', 'hate', state.him.hate);
+
+            renderCalendar('her');
+            renderCalendar('him');
+        }
+
+        function updateMeter(user, type, val) {
+            state[user][type] = val;
+            updateMeterUI(user, type, val);
+        }
+
+        function updateMeterUI(user, type, val) {
+            document.getElementById(`${user}-${type}-val`).innerText = val + '%';
+            document.getElementById(`${user}-${type}-bar`).style.width = val + '%';
+            document.querySelector(`#${user}-col input[oninput*="${type}"]`).value = val;
+        }
+
+        function renderCalendar(user) {
+            const grid = document.getElementById(`${user}-cal-grid`);
+            const title = document.getElementById(`${user}-cal-title`);
+            grid.innerHTML = '';
+
+            const y = state[user].year;
+            const m = state[user].month;
+
+            title.innerText = `${months[m]} ${y}`;
+
+            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            days.forEach(d => {
+                const el = document.createElement('div');
+                el.className = 'weekday';
+                el.innerText = d;
+                grid.appendChild(el);
+            });
+
+            const firstDay = new Date(y, m, 1).getDay();
+            const totalDays = new Date(y, m + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+                cell.innerText = day;
+
+                const dateKey = `${y}-${m + 1}-${day}`;
+                if (state[user].events[dateKey] && state[user].events[dateKey].length > 0) {
+                    const dot = document.createElement('div');
+                    dot.className = 'event-dot';
+                    cell.appendChild(dot);
+                }
+
+                cell.onclick = () => openModal(user, dateKey);
+                grid.appendChild(cell);
+            }
+        }
+
+        function changeMonth(user, delta) {
+            state[user].month += delta;
+            if (state[user].month < 0) {
+                state[user].month = 11;
+                state[user].year--;
+            } else if (state[user].month > 11) {
+                state[user].month = 0;
+                state[user].year++;
+            }
+            renderCalendar(user);
+        }
+
+        function openModal(user, dateKey) {
+            activeUser = user;
+            selectedDateKey = dateKey;
+            document.getElementById('modal-date-title').innerText = `${user.toUpperCase()}'s Schedule (${dateKey})`;
+            renderTasks();
+            document.getElementById('event-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('event-modal').style.display = 'none';
+            document.getElementById('modal-input').value = '';
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('modal-task-list');
+            list.innerHTML = '';
+            const tasks = state[activeUser].events[selectedDateKey] || [];
+            
+            if (tasks.length === 0) {
+                list.innerHTML = '<div style="color:#999; text-align:center;">No events for today.</div>';
+                return;
+            }
+
+            tasks.forEach((t, idx) => {
+                const item = document.createElement('div');
+                item.className = 'task-item';
+                item.innerHTML = `<span>• ${t}</span><span style="color:red; cursor:pointer;" onclick="removeTask(${idx})">✕</span>`;
+                list.appendChild(item);
+            });
+        }
+
+        function addTask() {
+            const input = document.getElementById('modal-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            if (!state[activeUser].events[selectedDateKey]) {
+                state[activeUser].events[selectedDateKey] = [];
+            }
+            state[activeUser].events[selectedDateKey].push(val);
+            input.value = '';
+            renderTasks();
+            renderCalendar(activeUser);
+            saveData(activeUser);
+        }
+
+        function removeTask(idx) {
+            state[activeUser].events[selectedDateKey].splice(idx, 1);
+            renderTasks();
+            renderCalendar(activeUser);
+            saveData(activeUser);
+        }
+
+        function saveData(user) {
+            localStorage.setItem('couple_dashboard_data', JSON.stringify(state));
+            alert(`${user === 'her' ? 'Her' : 'His'} settings saved successfully! 💖`);
+        }
+
+        init();
+    </script>
+</body>
+</html>
