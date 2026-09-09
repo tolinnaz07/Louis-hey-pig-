@@ -1,538 +1,594 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Couple Space ❤️</title>
-    <style>
-        :root {
-            --pink-bg: #fff0f5;
-            --pink-card: #ffe4e1;
-            --pink-accent: #ff69b4;
-            --pink-dark: #d87093;
-            
-            --blue-bg: #f0f8ff;
-            --blue-card: #e6f2ff;
-            --blue-accent: #1e90ff;
-            --blue-dark: #4682b4;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Shared Space</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #fcf8f6;
+      --her-color: #ff8fa3;
+      --her-bg: #fff0f3;
+      --his-color: #4ea8de;
+      --his-bg: #edf6f9;
+      --text-main: #4a4e69;
+      --card-bg: #ffffff;
+      --border-radius: 18px;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        body {
-            background: #f7f9fc;
-            color: #333;
-            padding: 20px;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    header p {
+      font-size: 1.1rem;
+      color: #777;
+      margin-top: 5px;
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+    .dashboards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 768px) {
+      .dashboards { grid-template-columns: 1fr; }
+    }
 
-        header h1 {
-            font-size: 2.2rem;
-            color: #4a4a4a;
-            margin-bottom: 5px;
-        }
+    .dashboard-card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+    .her-card { border-top: 6px solid var(--her-color); }
+    .his-card { border-top: 6px solid var(--his-color); }
 
-        header p {
-            color: #777;
-            font-size: 1rem;
-        }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 70px;
+      height: 70px;
+    }
+    .avatar-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    .avatar-wrapper input[type="file"] {
+      display: none;
+    }
+    .avatar-hint {
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      font-size: 9px;
+      padding: 2px 5px;
+      border-radius: 8px;
+      pointer-events: none;
+      white-space: nowrap;
+    }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .card-title { font-size: 1.5rem; font-weight: 700; }
+    .her-card .card-title { color: var(--her-color); }
+    .his-card .card-title { color: var(--his-color); }
 
-        /* Column Cards */
-        .column {
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    .meter-section { margin-bottom: 25px; }
+    .meter-section h4 { font-size: 1.1rem; margin-bottom: 15px; color: #555; }
+    .meter-group { margin-bottom: 15px; }
+    .meter-label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      outline: none;
+      appearance: none;
+      background: #e0e0e0;
+    }
+    .her-card input[type="range"]::-webkit-slider-thumb {
+      appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--her-color); cursor: pointer;
+    }
+    .his-card input[type="range"]::-webkit-slider-thumb {
+      appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--his-color); cursor: pointer;
+    }
 
-        .column.her {
-            background-color: var(--pink-bg);
-            border: 2px solid #ffccd5;
-        }
+    /* Calendar Styling */
+    .calendar-container { margin-top: 20px; }
+    .calendar-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700;
+    }
+    .calendar-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center;
+    }
+    .cal-day-name { font-size: 0.8rem; font-weight: 700; color: #aaa; padding-bottom: 5px; }
+    .cal-day {
+      min-height: 55px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .cal-day:hover { background: #f0f0f0; }
+    .cal-day.today {
+      border: 2px solid var(--text-main);
+      font-weight: bold;
+      background: #fff;
+    }
+    .her-card .cal-day.today { border-color: var(--her-color); }
+    .his-card .cal-day.today { border-color: var(--his-color); }
+    .cal-event-text {
+      font-size: 0.7rem;
+      color: #333;
+      background: rgba(255,255,255,0.9);
+      border-radius: 4px;
+      padding: 2px 4px;
+      margin-top: 3px;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
 
-        .column.him {
-            background-color: var(--blue-bg);
-            border: 2px solid #cce5ff;
-        }
+    /* Modules Section */
+    .modules-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+    @media (max-width: 768px) {
+      .modules-section { grid-template-columns: 1fr; }
+    }
+    .module-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .module-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+    .module-card h3 { margin-bottom: 10px; font-size: 1.3rem; }
 
-        .profile-title {
-            font-size: 1.5rem;
-            text-align: center;
-            padding-bottom: 10px;
-            border-bottom: 2px stroke #fff;
-        }
+    /* Modal / Journal Overlay */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center;
+      z-index: 1000; padding: 20px;
+    }
+    .modal-content {
+      width: 100%; max-width: 650px; max-height: 85vh; overflow-y: auto;
+      border-radius: 20px; padding: 30px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .close-btn {
+      position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; border: none; background: none;
+    }
 
-        .column.her .profile-title { color: var(--pink-dark); }
-        .column.him .profile-title { color: var(--blue-dark); }
+    /* Journal Styles */
+    .journal-ruoruo { background: #fff5f7; font-family: 'Caveat', cursive; border: 3px dashed #ffb3c1; }
+    .journal-ruoruo h2 { color: #ff4d6d; font-size: 2rem; }
+    .journal-louis { background: #f0f4f8; font-family: 'Nunito', sans-serif; border: 3px solid #90e0ef; }
+    .journal-louis h2 { color: #0077b6; }
+    .journal-movies { background: #fdfbf7; font-family: 'Nunito', sans-serif; border: 2px solid #d3d3d3; }
 
-        /* Meter Section */
-        .meter-box {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 15px;
-            border-radius: 15px;
-        }
+    .journal-entry-list { margin-top: 20px; }
+    .entry-item {
+      background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px;
+      text-align: left; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative;
+    }
+    .entry-date { font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+    .entry-text { font-size: 1.1rem; white-space: pre-wrap; }
 
-        .meter-box h3 {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            text-align: center;
-        }
+    .journal-input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .journal-textarea {
+      width: 100%; height: 100px; padding: 12px; border-radius: 10px; border: 1fr solid #ccc;
+      font-family: inherit; font-size: 1rem; resize: none;
+    }
+    .save-btn {
+      align-self: flex-end; padding: 8px 20px; border: none; border-radius: 20px;
+      background: #4a4e69; color: white; cursor: pointer; font-weight: 600;
+    }
 
-        .meter-item {
-            margin-bottom: 12px;
-        }
-
-        .meter-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .progress-bar-bg {
-            height: 12px;
-            background: #e0e0e0;
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 50%;
-            transition: width 0.3s ease;
-        }
-
-        .column.her .love-fill { background: var(--pink-accent); }
-        .column.her .hate-fill { background: #ff4d4d; }
-        .column.him .love-fill { background: var(--blue-accent); }
-        .column.him .hate-fill { background: #ff4d4d; }
-
-        .control-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .control-row input[type="range"] {
-            flex: 1;
-        }
-
-        /* Calendar Section */
-        .calendar-box {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 15px;
-            border-radius: 15px;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .calendar-header h3 {
-            font-size: 1.1rem;
-        }
-
-        .calendar-nav-btn {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 2px 8px;
-            border-radius: 5px;
-        }
-
-        .calendar-nav-btn:hover { background: #eee; }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            text-align: center;
-        }
-
-        .weekday {
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #888;
-            padding-bottom: 5px;
-        }
-
-        .day-cell {
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            position: relative;
-            background: #fff;
-            transition: 0.2s;
-        }
-
-        .day-cell:hover {
-            transform: scale(1.05);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .column.her .day-cell.selected { background: var(--pink-card); border: 1px solid var(--pink-accent); }
-        .column.him .day-cell.selected { background: var(--blue-card); border: 1px solid var(--blue-accent); }
-
-        .event-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 3px;
-        }
-
-        .column.her .event-dot { background: var(--pink-accent); }
-        .column.him .event-dot { background: var(--blue-accent); }
-
-        /* Save Button */
-        .save-btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .column.her .save-btn { background: var(--pink-dark); }
-        .column.him .save-btn { background: var(--blue-dark); }
-        .save-btn:hover { opacity: 0.9; }
-
-        /* Event Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            width: 300px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .modal-content h4 { text-align: center; }
-        .modal-content input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
-        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; }
-        .modal-btn { padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; }
-        .btn-add { background: #28a745; color: white; }
-        .btn-close { background: #6c757d; color: white; }
-        .task-list { max-height: 120px; overflow-y: auto; font-size: 0.9rem; }
-        .task-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #eee; }
-    </style>
+    /* Movie Rating System */
+    .movie-rating-group { display: flex; gap: 15px; margin-top: 10px; font-size: 0.9rem; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Our Shared Space ❤️</h1>
-        <p>Track our moods & schedule our days together</p>
-    </header>
+  <header>
+    <h1>Our Shared Space ❤️</h1>
+    <p>Track our moods & schedule our days together</p>
+  </header>
 
-    <div class="dashboard">
-        <!-- Her Section (Pink) -->
-        <div class="column her" id="her-col">
-            <h2 class="profile-title">Her Dashboard 🌸</h2>
-
-            <div class="meter-box">
-                <h3>Mood & Feel Meter</h3>
-                
-                <div class="meter-item">
-                    <div class="meter-labels">
-                        <span>Love Index</span>
-                        <span id="her-love-val">80%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill love-fill" id="her-love-bar" style="width: 80%;"></div>
-                    </div>
-                    <div class="control-row">
-                        <input type="range" min="0" max="100" value="80" oninput="updateMeter('her', 'love', this.value)">
-                    </div>
-                </div>
-
-                <div class="meter-item">
-                    <div class="meter-labels">
-                        <span>Hate / Annoyed</span>
-                        <span id="her-hate-val">10%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill hate-fill" id="her-hate-bar" style="width: 10%;"></div>
-                    </div>
-                    <div class="control-row">
-                        <input type="range" min="0" max="100" value="10" oninput="updateMeter('her', 'hate', this.value)">
-                    </div>
-                </div>
-            </div>
-
-            <div class="calendar-box">
-                <div class="calendar-header">
-                    <button class="calendar-nav-btn" onclick="changeMonth('her', -1)">❮</button>
-                    <h3 id="her-cal-title">Month Year</h3>
-                    <button class="calendar-nav-btn" onclick="changeMonth('her', 1)">❯</button>
-                </div>
-                <div class="calendar-grid" id="her-cal-grid"></div>
-            </div>
-
-            <button class="save-btn" onclick="saveData('her')">Save Her Settings 💾</button>
+  <div class="dashboards">
+    <!-- Her Dashboard -->
+    <div class="dashboard-card her-card">
+      <div class="card-header">
+        <div class="avatar-wrapper" onclick="document.getElementById('her-avatar-input').click()">
+          <img id="her-avatar" class="avatar-img" src="https://via.placeholder.com/70?text=Upload" alt="Her Avatar">
+          <span class="avatar-hint">Click to Change</span>
+          <input type="file" id="her-avatar-input" accept="image/*" onchange="uploadAvatar(event, 'her-avatar')">
         </div>
+        <div class="card-title">Her Dashboard 🌸</div>
+      </div>
 
-        <!-- His Section (Blue) -->
-        <div class="column him" id="him-col">
-            <h2 class="profile-title">His Dashboard 📘</h2>
-
-            <div class="meter-box">
-                <h3>Mood & Feel Meter</h3>
-                
-                <div class="meter-item">
-                    <div class="meter-labels">
-                        <span>Love Index</span>
-                        <span id="him-love-val">85%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill love-fill" id="him-love-bar" style="width: 85%;"></div>
-                    </div>
-                    <div class="control-row">
-                        <input type="range" min="0" max="100" value="85" oninput="updateMeter('him', 'love', this.value)">
-                    </div>
-                </div>
-
-                <div class="meter-item">
-                    <div class="meter-labels">
-                        <span>Hate / Annoyed</span>
-                        <span id="him-hate-val">5%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill hate-fill" id="him-hate-bar" style="width: 5%;"></div>
-                    </div>
-                    <div class="control-row">
-                        <input type="range" min="0" max="100" value="5" oninput="updateMeter('him', 'hate', this.value)">
-                    </div>
-                </div>
-            </div>
-
-            <div class="calendar-box">
-                <div class="calendar-header">
-                    <button class="calendar-nav-btn" onclick="changeMonth('him', -1)">❮</button>
-                    <h3 id="him-cal-title">Month Year</h3>
-                    <button class="calendar-nav-btn" onclick="changeMonth('him', 1)">❯</button>
-                </div>
-                <div class="calendar-grid" id="him-cal-grid"></div>
-            </div>
-
-            <button class="save-btn" onclick="saveData('him')">Save His Settings 💾</button>
+      <div class="meter-section">
+        <h4>Mood & Feel Meter</h4>
+        <div class="meter-group">
+          <div class="meter-label"><span>Lobe Index</span><span id="her-lobe-val">74%</span></div>
+          <input type="range" id="her-lobe" min="0" max="100" value="74" oninput="updateMeter('her-lobe', 'her-lobe-val')">
         </div>
+        <div class="meter-group">
+          <div class="meter-label"><span>Hate / Annoyed</span><span id="her-hate-val">100%</span></div>
+          <input type="range" id="her-hate" min="0" max="100" value="100" oninput="updateMeter('her-hate', 'her-hate-val')">
+        </div>
+      </div>
+
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button onclick="changeMonth('her', -1)">&lt;</button>
+          <span id="her-cal-title">September 2026</span>
+          <button onclick="changeMonth('her', 1)">&gt;</button>
+        </div>
+        <div class="calendar-grid" id="her-calendar"></div>
+      </div>
     </div>
 
-    <!-- Event Popup Modal -->
-    <div class="modal" id="event-modal">
-        <div class="modal-content">
-            <h4 id="modal-date-title">Date Tasks</h4>
-            <div class="task-list" id="modal-task-list"></div>
-            <input type="text" id="modal-input" placeholder="Enter new task/event...">
-            <div class="modal-actions">
-                <button class="modal-btn btn-add" onclick="addTask()">Add Event</button>
-                <button class="modal-btn btn-close" onclick="closeModal()">Close</button>
-            </div>
+    <!-- His Dashboard -->
+    <div class="dashboard-card his-card">
+      <div class="card-header">
+        <div class="avatar-wrapper" onclick="document.getElementById('his-avatar-input').click()">
+          <img id="his-avatar" class="avatar-img" src="https://via.placeholder.com/70?text=Upload" alt="His Avatar">
+          <span class="avatar-hint">Click to Change</span>
+          <input type="file" id="his-avatar-input" accept="image/*" onchange="uploadAvatar(event, 'his-avatar')">
         </div>
-    </div>
+        <div class="card-title">His Dashboard 📘</div>
+      </div>
 
-    <script>
-        const state = {
-            her: { love: 80, hate: 10, month: new Date().getMonth(), year: new Date().getFullYear(), events: {} },
-            him: { love: 85, hate: 5, month: new Date().getMonth(), year: new Date().getFullYear(), events: {} }
+      <div class="meter-section">
+        <h4>Mood & Feel Meter</h4>
+        <div class="meter-group">
+          <div class="meter-label"><span>Lobe Index</span><span id="his-lobe-val">100%</span></div>
+          <input type="range" id="his-lobe" min="0" max="100" value="100" oninput="updateMeter('his-lobe', 'his-lobe-val')">
+        </div>
+        <div class="meter-group">
+          <div class="meter-label"><span>Hate / Annoyed</span><span id="his-hate-val">0%</span></div>
+          <input type="range" id="his-hate" min="0" max="100" value="0" oninput="updateMeter('his-hate', 'his-hate-val')">
+        </div>
+      </div>
+
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button onclick="changeMonth('his', -1)">&lt;</button>
+          <span id="his-cal-title">September 2026</span>
+          <button onclick="changeMonth('his', 1)">&gt;</button>
+        </div>
+        <div class="calendar-grid" id="his-calendar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modules -->
+  <div class="modules-section">
+    <div class="module-card" onclick="openJournal('ruoruo')">
+      <h3>📖 ruoruo's diary</h3>
+      <p style="color: #888; font-size: 0.9rem;">Cute & Personal Space</p>
+    </div>
+    <div class="module-card" onclick="openJournal('louis')">
+      <h3>🐷 Louis hey's diary</h3>
+      <p style="color: #888; font-size: 0.9rem;">His Personal Journal</p>
+    </div>
+    <div class="module-card" onclick="openJournal('movies')">
+      <h3>🎬 Movies</h3>
+      <p style="color: #888; font-size: 0.9rem;">Movies watched & Our Ratings</p>
+    </div>
+  </div>
+
+  <!-- Modal Overlay for Journals -->
+  <div class="modal-overlay" id="journal-modal">
+    <div class="modal-content" id="modal-content-box">
+      <button class="close-btn" onclick="closeJournal()">&times;</button>
+      <h2 id="modal-title" style="margin-bottom: 15px;"></h2>
+      
+      <div class="journal-input-group" id="normal-input-group">
+        <textarea class="journal-textarea" id="journal-text-input" placeholder="Write down your thoughts..."></textarea>
+        <button class="save-btn" onclick="saveJournalEntry()">Save Entry</button>
+      </div>
+
+      <!-- Movie Specific Input -->
+      <div class="journal-input-group" id="movie-input-group" style="display: none;">
+        <input type="text" id="movie-title-input" placeholder="Movie Title..." style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        <textarea class="journal-textarea" id="movie-review-input" placeholder="Your Thoughts / Notes..."></textarea>
+        <div style="display: flex; gap: 10px; justify-content: space-between;">
+          <input type="text" id="her-rating-input" placeholder="Her Rating (e.g. 5/5)" style="padding: 8px; border-radius: 8px; border: 1px solid #ccc; width: 48%;">
+          <input type="text" id="his-rating-input" placeholder="His Rating (e.g. 4.5/5)" style="padding: 8px; border-radius: 8px; border: 1px solid #ccc; width: 48%;">
+        </div>
+        <button class="save-btn" onclick="saveMovieEntry()" style="margin-top: 10px;">Save Movie</button>
+      </div>
+
+      <div class="journal-entry-list" id="journal-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // Global State & Storage Key setup
+    const currentDate = new Date();
+    let currentHerMonth = currentDate.getMonth();
+    let currentHerYear = currentDate.getFullYear();
+    let currentHisMonth = currentDate.getMonth();
+    let currentHisYear = currentDate.getFullYear();
+    let activeJournalType = '';
+
+    // Initialize Page
+    window.onload = function() {
+      loadSavedData();
+      renderCalendar('her', currentHerYear, currentHerMonth);
+      renderCalendar('his', currentHisYear, currentHisMonth);
+    };
+
+    // --- Avatar Upload & LocalStorage ---
+    function uploadAvatar(event, avatarId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgUrl = e.target.result;
+          document.getElementById(avatarId).src = imgUrl;
+          localStorage.setItem(avatarId, imgUrl);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // --- Meters Update ---
+    function updateMeter(id, valId) {
+      const val = document.getElementById(id).value;
+      document.getElementById(valId).innerText = val + '%';
+      localStorage.setItem(id, val);
+    }
+
+    // --- Calendar System ---
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
+
+    function renderCalendar(type, year, month) {
+      const calGrid = document.getElementById(type + '-calendar');
+      const calTitle = document.getElementById(type + '-cal-title');
+      calGrid.innerHTML = '';
+      calTitle.innerText = `${monthNames[month]} ${year}`;
+
+      dayNames.forEach(d => {
+        const dEl = document.createElement('div');
+        dEl.className = 'cal-day-name';
+        dEl.innerText = d;
+        calGrid.appendChild(dEl);
+      });
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        const emptyEl = document.createElement('div');
+        calGrid.appendChild(emptyEl);
+      }
+
+      const today = new Date();
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'cal-day';
+        dayEl.innerText = day;
+
+        if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+          dayEl.classList.add('today');
+        }
+
+        const dateKey = `${type}-cal-${year}-${month + 1}-${day}`;
+        const savedEvent = localStorage.getItem(dateKey);
+        if (savedEvent) {
+          const eventTag = document.createElement('div');
+          eventTag.className = 'cal-event-text';
+          eventTag.innerText = savedEvent;
+          dayEl.appendChild(eventTag);
+        }
+
+        dayEl.onclick = function() {
+          const note = prompt(`Schedule / Event for ${monthNames[month]} ${day}, ${year}:`, savedEvent || '');
+          if (note !== null) {
+            if (note.trim() === '') {
+              localStorage.removeItem(dateKey);
+            } else {
+              localStorage.setItem(dateKey, note);
+            }
+            renderCalendar(type, year, month);
+          }
         };
 
-        let activeUser = null;
-        let selectedDateKey = null;
+        calGrid.appendChild(dayEl);
+      }
+    }
 
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    function changeMonth(type, delta) {
+      if (type === 'her') {
+        currentHerMonth += delta;
+        if (currentHerMonth < 0) { currentHerMonth = 11; currentHerYear--; }
+        if (currentHerMonth > 11) { currentHerMonth = 0; currentHerYear++; }
+        renderCalendar('her', currentHerYear, currentHerMonth);
+      } else {
+        currentHisMonth += delta;
+        if (currentHisMonth < 0) { currentHisMonth = 11; currentHisYear--; }
+        if (currentHisMonth > 11) { currentHisMonth = 0; currentHisYear++; }
+        renderCalendar('his', currentHisYear, currentHisMonth);
+      }
+    }
 
-        // Initialize & Load Saved Data
-        function init() {
-            const saved = localStorage.getItem('couple_dashboard_data');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                state.her.love = parsed.her?.love ?? 80;
-                state.her.hate = parsed.her?.hate ?? 10;
-                state.her.events = parsed.her?.events ?? {};
-                
-                state.him.love = parsed.him?.love ?? 85;
-                state.him.hate = parsed.him?.hate ?? 5;
-                state.him.events = parsed.him?.events ?? {};
-            }
+    // --- Journal & Modules System ---
+    function openJournal(type) {
+      activeJournalType = type;
+      const modal = document.getElementById('journal-modal');
+      const box = document.getElementById('modal-content-box');
+      const title = document.getElementById('modal-title');
+      const normalGroup = document.getElementById('normal-input-group');
+      const movieGroup = document.getElementById('movie-input-group');
 
-            updateMeterUI('her', 'love', state.her.love);
-            updateMeterUI('her', 'hate', state.her.hate);
-            updateMeterUI('him', 'love', state.him.love);
-            updateMeterUI('him', 'hate', state.him.hate);
+      box.className = 'modal-content';
+      normalGroup.style.display = 'flex';
+      movieGroup.style.display = 'none';
 
-            renderCalendar('her');
-            renderCalendar('him');
+      if (type === 'ruoruo') {
+        box.classList.add('journal-ruoruo');
+        title.innerText = "ruoruo's diary 🌸";
+      } else if (type === 'louis') {
+        box.classList.add('journal-louis');
+        title.innerText = "Louis hey's diary 🐷";
+      } else if (type === 'movies') {
+        box.classList.add('journal-movies');
+        title.innerText = "Movies Watchlist 🎬";
+        normalGroup.style.display = 'none';
+        movieGroup.style.display = 'flex';
+      }
+
+      modal.style.display = 'flex';
+      renderEntries();
+    }
+
+    function closeJournal() {
+      document.getElementById('journal-modal').style.display = 'none';
+    }
+
+    function saveJournalEntry() {
+      const input = document.getElementById('journal-text-input');
+      if (!input.value.trim()) return;
+
+      const entries = JSON.parse(localStorage.getItem('journal_' + activeJournalType) || '[]');
+      entries.unshift({
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        text: input.value.trim()
+      });
+
+      localStorage.setItem('journal_' + activeJournalType, JSON.stringify(entries));
+      input.value = '';
+      renderEntries();
+    }
+
+    function saveMovieEntry() {
+      const title = document.getElementById('movie-title-input').value.trim();
+      const review = document.getElementById('movie-review-input').value.trim();
+      const herRating = document.getElementById('her-rating-input').value.trim();
+      const hisRating = document.getElementById('his-rating-input').value.trim();
+
+      if (!title) return;
+
+      const entries = JSON.parse(localStorage.getItem('journal_movies') || '[]');
+      entries.unshift({
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        title: title,
+        review: review,
+        herRating: herRating || 'N/A',
+        hisRating: hisRating || 'N/A'
+      });
+
+      localStorage.setItem('journal_movies', JSON.stringify(entries));
+      document.getElementById('movie-title-input').value = '';
+      document.getElementById('movie-review-input').value = '';
+      document.getElementById('her-rating-input').value = '';
+      document.getElementById('his-rating-input').value = '';
+      renderEntries();
+    }
+
+    function renderEntries() {
+      const list = document.getElementById('journal-list');
+      list.innerHTML = '';
+      const entries = JSON.parse(localStorage.getItem('journal_' + activeJournalType) || '[]');
+
+      entries.forEach(entry => {
+        const item = document.createElement('div');
+        item.className = 'entry-item';
+
+        if (activeJournalType === 'movies') {
+          item.innerHTML = `
+            <div class="entry-date">${entry.date}</div>
+            <div style="font-weight: bold; font-size: 1.2rem; margin-bottom: 5px;">${entry.title}</div>
+            <div class="entry-text">${entry.review}</div>
+            <div class="movie-rating-group">
+              <span>🌸 Her Rating: <strong>${entry.herRating}</strong></span>
+              <span>📘 His Rating: <strong>${entry.hisRating}</strong></span>
+            </div>
+          `;
+        } else {
+          item.innerHTML = `
+            <div class="entry-date">${entry.date}</div>
+            <div class="entry-text">${entry.text}</div>
+          `;
         }
+        list.appendChild(item);
+      });
+    }
 
-        function updateMeter(user, type, val) {
-            state[user][type] = val;
-            updateMeterUI(user, type, val);
+    // --- Load Stored Values on Page Load ---
+    function loadSavedData() {
+      ['her-avatar', 'his-avatar'].forEach(id => {
+        const saved = localStorage.getItem(id);
+        if (saved) document.getElementById(id).src = saved;
+      });
+
+      ['her-lobe', 'her-hate', 'his-lobe', 'his-hate'].forEach(id => {
+        const saved = localStorage.getItem(id);
+        if (saved !== null) {
+          document.getElementById(id).value = saved;
+          document.getElementById(id + '-val').innerText = saved + '%';
         }
-
-        function updateMeterUI(user, type, val) {
-            document.getElementById(`${user}-${type}-val`).innerText = val + '%';
-            document.getElementById(`${user}-${type}-bar`).style.width = val + '%';
-            document.querySelector(`#${user}-col input[oninput*="${type}"]`).value = val;
-        }
-
-        function renderCalendar(user) {
-            const grid = document.getElementById(`${user}-cal-grid`);
-            const title = document.getElementById(`${user}-cal-title`);
-            grid.innerHTML = '';
-
-            const y = state[user].year;
-            const m = state[user].month;
-
-            title.innerText = `${months[m]} ${y}`;
-
-            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-            days.forEach(d => {
-                const el = document.createElement('div');
-                el.className = 'weekday';
-                el.innerText = d;
-                grid.appendChild(el);
-            });
-
-            const firstDay = new Date(y, m, 1).getDay();
-            const totalDays = new Date(y, m + 1, 0).getDate();
-
-            for (let i = 0; i < firstDay; i++) {
-                grid.appendChild(document.createElement('div'));
-            }
-
-            for (let day = 1; day <= totalDays; day++) {
-                const cell = document.createElement('div');
-                cell.className = 'day-cell';
-                cell.innerText = day;
-
-                const dateKey = `${y}-${m + 1}-${day}`;
-                if (state[user].events[dateKey] && state[user].events[dateKey].length > 0) {
-                    const dot = document.createElement('div');
-                    dot.className = 'event-dot';
-                    cell.appendChild(dot);
-                }
-
-                cell.onclick = () => openModal(user, dateKey);
-                grid.appendChild(cell);
-            }
-        }
-
-        function changeMonth(user, delta) {
-            state[user].month += delta;
-            if (state[user].month < 0) {
-                state[user].month = 11;
-                state[user].year--;
-            } else if (state[user].month > 11) {
-                state[user].month = 0;
-                state[user].year++;
-            }
-            renderCalendar(user);
-        }
-
-        function openModal(user, dateKey) {
-            activeUser = user;
-            selectedDateKey = dateKey;
-            document.getElementById('modal-date-title').innerText = `${user.toUpperCase()}'s Schedule (${dateKey})`;
-            renderTasks();
-            document.getElementById('event-modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('event-modal').style.display = 'none';
-            document.getElementById('modal-input').value = '';
-        }
-
-        function renderTasks() {
-            const list = document.getElementById('modal-task-list');
-            list.innerHTML = '';
-            const tasks = state[activeUser].events[selectedDateKey] || [];
-            
-            if (tasks.length === 0) {
-                list.innerHTML = '<div style="color:#999; text-align:center;">No events for today.</div>';
-                return;
-            }
-
-            tasks.forEach((t, idx) => {
-                const item = document.createElement('div');
-                item.className = 'task-item';
-                item.innerHTML = `<span>• ${t}</span><span style="color:red; cursor:pointer;" onclick="removeTask(${idx})">✕</span>`;
-                list.appendChild(item);
-            });
-        }
-
-        function addTask() {
-            const input = document.getElementById('modal-input');
-            const val = input.value.trim();
-            if (!val) return;
-
-            if (!state[activeUser].events[selectedDateKey]) {
-                state[activeUser].events[selectedDateKey] = [];
-            }
-            state[activeUser].events[selectedDateKey].push(val);
-            input.value = '';
-            renderTasks();
-            renderCalendar(activeUser);
-            saveData(activeUser);
-        }
-
-        function removeTask(idx) {
-            state[activeUser].events[selectedDateKey].splice(idx, 1);
-            renderTasks();
-            renderCalendar(activeUser);
-            saveData(activeUser);
-        }
-
-        function saveData(user) {
-            localStorage.setItem('couple_dashboard_data', JSON.stringify(state));
-            alert(`${user === 'her' ? 'Her' : 'His'} settings saved successfully! 💖`);
-        }
-
-        init();
-    </script>
+      });
+    }
+  </script>
 </body>
 </html>
