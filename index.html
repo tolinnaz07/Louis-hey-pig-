@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Shared Space</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --bg-color: #fcf8f6;
@@ -230,7 +235,7 @@
 
     .journal-input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
     .journal-textarea {
-      width: 100%; height: 100px; padding: 12px; border-radius: 10px; border: 1fr solid #ccc;
+      width: 100%; height: 100px; padding: 12px; border-radius: 10px; border: 1px solid #ccc;
       font-family: inherit; font-size: 1rem; resize: none;
     }
     .save-btn {
@@ -265,11 +270,11 @@
         <h4>Mood & Feel Meter</h4>
         <div class="meter-group">
           <div class="meter-label"><span>Lobe Index</span><span id="her-lobe-val">74%</span></div>
-          <input type="range" id="her-lobe" min="0" max="100" value="74" oninput="updateMeter('her-lobe', 'her-lobe-val')">
+          <input type="range" id="her-lobe" min="0" max="100" value="74" onchange="updateMeter('her-lobe', 'her-lobe-val')" oninput="document.getElementById('her-lobe-val').innerText=this.value+'%'">
         </div>
         <div class="meter-group">
           <div class="meter-label"><span>Hate / Annoyed</span><span id="her-hate-val">100%</span></div>
-          <input type="range" id="her-hate" min="0" max="100" value="100" oninput="updateMeter('her-hate', 'her-hate-val')">
+          <input type="range" id="her-hate" min="0" max="100" value="100" onchange="updateMeter('her-hate', 'her-hate-val')" oninput="document.getElementById('her-hate-val').innerText=this.value+'%'">
         </div>
       </div>
 
@@ -298,11 +303,11 @@
         <h4>Mood & Feel Meter</h4>
         <div class="meter-group">
           <div class="meter-label"><span>Lobe Index</span><span id="his-lobe-val">100%</span></div>
-          <input type="range" id="his-lobe" min="0" max="100" value="100" oninput="updateMeter('his-lobe', 'his-lobe-val')">
+          <input type="range" id="his-lobe" min="0" max="100" value="100" onchange="updateMeter('his-lobe', 'his-lobe-val')" oninput="document.getElementById('his-lobe-val').innerText=this.value+'%'">
         </div>
         <div class="meter-group">
           <div class="meter-label"><span>Hate / Annoyed</span><span id="his-hate-val">0%</span></div>
-          <input type="range" id="his-hate" min="0" max="100" value="0" oninput="updateMeter('his-hate', 'his-hate-val')">
+          <input type="range" id="his-hate" min="0" max="100" value="0" onchange="updateMeter('his-hate', 'his-hate-val')" oninput="document.getElementById('his-hate-val').innerText=this.value+'%'">
         </div>
       </div>
 
@@ -360,43 +365,87 @@
   </div>
 
   <script>
-    // Global State & Storage Key setup
+    // 1. Firebase 初始化
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIkjMl2I5lqOSeJKkFEosMd7e98Uk2aLw",
+      authDomain: "louis-hey-pig.firebaseapp.com",
+      databaseURL: "https://louis-hey-pig-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "louis-hey-pig",
+      storageBucket: "louis-hey-pig.firebasestorage.app",
+      messagingSenderId: "1055726354389",
+      appId: "1:1055726354389:web:cf7a06b1c2dea89292875c",
+      measurementId: "G-SFX2RCCRB9"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const sharedRef = db.ref('sharedSpace');
+
+    // 全局状态
     const currentDate = new Date();
     let currentHerMonth = currentDate.getMonth();
     let currentHerYear = currentDate.getFullYear();
     let currentHisMonth = currentDate.getMonth();
     let currentHisYear = currentDate.getFullYear();
     let activeJournalType = '';
+    let globalData = {};
 
-    // Initialize Page
+    // 页面加载并实时监听 Firebase 数据更新
     window.onload = function() {
-      loadSavedData();
-      renderCalendar('her', currentHerYear, currentHerMonth);
-      renderCalendar('his', currentHisYear, currentHisMonth);
+      sharedRef.on('value', (snapshot) => {
+        globalData = snapshot.val() || {};
+        renderAllData();
+      });
     };
 
-    // --- Avatar Upload & LocalStorage ---
+    function renderAllData() {
+      // 1. 头像更新
+      if (globalData.avatars) {
+        if (globalData.avatars['her-avatar']) document.getElementById('her-avatar').src = globalData.avatars['her-avatar'];
+        if (globalData.avatars['his-avatar']) document.getElementById('his-avatar').src = globalData.avatars['his-avatar'];
+      }
+
+      // 2. Mood Meters 更新
+      if (globalData.meters) {
+        ['her-lobe', 'her-hate', 'his-lobe', 'his-hate'].forEach(id => {
+          if (globalData.meters[id] !== undefined) {
+            document.getElementById(id).value = globalData.meters[id];
+            document.getElementById(id + '-val').innerText = globalData.meters[id] + '%';
+          }
+        });
+      }
+
+      // 3. 日历更新
+      renderCalendar('her', currentHerYear, currentHerMonth);
+      renderCalendar('his', currentHisYear, currentHisMonth);
+
+      // 4. 日记更新（如果弹窗是打开状态）
+      if (document.getElementById('journal-modal').style.display === 'flex') {
+        renderEntries();
+      }
+    }
+
+    // 头像上传同步
     function uploadAvatar(event, avatarId) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
           const imgUrl = e.target.result;
-          document.getElementById(avatarId).src = imgUrl;
-          localStorage.setItem(avatarId, imgUrl);
+          sharedRef.child('avatars').child(avatarId).set(imgUrl);
         };
         reader.readAsDataURL(file);
       }
     }
 
-    // --- Meters Update ---
+    // Mood Meter 同步
     function updateMeter(id, valId) {
       const val = document.getElementById(id).value;
       document.getElementById(valId).innerText = val + '%';
-      localStorage.setItem(id, val);
+      sharedRef.child('meters').child(id).set(val);
     }
 
-    // --- Calendar System ---
+    // 日历系统
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -433,7 +482,8 @@
         }
 
         const dateKey = `${type}-cal-${year}-${month + 1}-${day}`;
-        const savedEvent = localStorage.getItem(dateKey);
+        const savedEvent = globalData.calendar ? globalData.calendar[dateKey] : null;
+
         if (savedEvent) {
           const eventTag = document.createElement('div');
           eventTag.className = 'cal-event-text';
@@ -445,11 +495,10 @@
           const note = prompt(`Schedule / Event for ${monthNames[month]} ${day}, ${year}:`, savedEvent || '');
           if (note !== null) {
             if (note.trim() === '') {
-              localStorage.removeItem(dateKey);
+              sharedRef.child('calendar').child(dateKey).remove();
             } else {
-              localStorage.setItem(dateKey, note);
+              sharedRef.child('calendar').child(dateKey).set(note.trim());
             }
-            renderCalendar(type, year, month);
           }
         };
 
@@ -471,7 +520,7 @@
       }
     }
 
-    // --- Journal & Modules System ---
+    // 日记与模块系统
     function openJournal(type) {
       activeJournalType = type;
       const modal = document.getElementById('journal-modal');
@@ -509,15 +558,13 @@
       const input = document.getElementById('journal-text-input');
       if (!input.value.trim()) return;
 
-      const entries = JSON.parse(localStorage.getItem('journal_' + activeJournalType) || '[]');
-      entries.unshift({
+      const newEntry = {
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         text: input.value.trim()
-      });
+      };
 
-      localStorage.setItem('journal_' + activeJournalType, JSON.stringify(entries));
+      sharedRef.child('journals').child(activeJournalType).push(newEntry);
       input.value = '';
-      renderEntries();
     }
 
     function saveMovieEntry() {
@@ -528,27 +575,30 @@
 
       if (!title) return;
 
-      const entries = JSON.parse(localStorage.getItem('journal_movies') || '[]');
-      entries.unshift({
+      const newEntry = {
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         title: title,
         review: review,
         herRating: herRating || 'N/A',
         hisRating: hisRating || 'N/A'
-      });
+      };
 
-      localStorage.setItem('journal_movies', JSON.stringify(entries));
+      sharedRef.child('journals').child('movies').push(newEntry);
       document.getElementById('movie-title-input').value = '';
       document.getElementById('movie-review-input').value = '';
       document.getElementById('her-rating-input').value = '';
       document.getElementById('his-rating-input').value = '';
-      renderEntries();
     }
 
     function renderEntries() {
       const list = document.getElementById('journal-list');
       list.innerHTML = '';
-      const entries = JSON.parse(localStorage.getItem('journal_' + activeJournalType) || '[]');
+      
+      const journalData = globalData.journals ? globalData.journals[activeJournalType] : null;
+      if (!journalData) return;
+
+      // 转换为数组并反转排序（最新的在最前）
+      const entries = Object.values(journalData).reverse();
 
       entries.forEach(entry => {
         const item = document.createElement('div');
@@ -571,22 +621,6 @@
           `;
         }
         list.appendChild(item);
-      });
-    }
-
-    // --- Load Stored Values on Page Load ---
-    function loadSavedData() {
-      ['her-avatar', 'his-avatar'].forEach(id => {
-        const saved = localStorage.getItem(id);
-        if (saved) document.getElementById(id).src = saved;
-      });
-
-      ['her-lobe', 'her-hate', 'his-lobe', 'his-hate'].forEach(id => {
-        const saved = localStorage.getItem(id);
-        if (saved !== null) {
-          document.getElementById(id).value = saved;
-          document.getElementById(id + '-val').innerText = saved + '%';
-        }
       });
     }
   </script>
